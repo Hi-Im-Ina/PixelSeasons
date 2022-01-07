@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        maven { url = "https://maven.minecraftforge.net" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    }
+}
+
+plugins {
+    id('net.kyori.blossom') version '1.3.0'
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+version = modVersion
+group = modGroup
+archivesBaseName = modName
+
+minecraft {
+    mappings channel: mappingsChannel, version: mappingsVersion
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            // ToDo figure out how to reference external ATs w.o directly adding them to the project.
+            // accessTransformers('src/main/resources/META-INF/sereneseasons_at.cfg', 'src/main/resources/META-INF/pixelmon_at.cfg')
+            mods {
+                pixelseasons {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    // If you're confused why is this being used it's because the actual curse "maven" works great! Refer to https://www.cursemaven.com/ for usage info.
+    maven {
+        url 'https://www.cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:' + minecraftVersion + '-' + forgeVersion
+    implementation fg.deobf('curse.maven:serene-seasons-' + sereneSeasonsId + ':' + sereneSeasonsVersion)
+    implementation fg.deobf('curse.maven:pixelmon-' + pixelmonId + ':' + pixelmonVersion)
+}
+
+processResources {
+    filesMatching('mcmod.info') {
+        expand(
+            'modId': modId,
+            'modName': modName,
+            'modVersion': modVersion,
+            'minecraftVersion': minecraftVersion
+        )
+    }
+}
+
+blossom {
+    def mainClazz = 'src/main/java/' + modGroup.replace(".", "/") + '/' + modName + '.java'
+    replaceToken('@MOD_NAME@', modName, mainClazz)
+    replaceToken('@MOD_ID@', modId, mainClazz)
+    replaceToken('@VERSION@', modVersion, mainClazz)
+}
+jar.finalizedBy('reobfJar')
