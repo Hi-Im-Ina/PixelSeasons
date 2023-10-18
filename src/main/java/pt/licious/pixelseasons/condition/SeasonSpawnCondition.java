@@ -17,9 +17,9 @@ import java.util.Set;
 
 public class SeasonSpawnCondition extends SpawnCondition {
 
-    private static final transient Season[] SEASONS = Season.values();
-    private static final transient Season.SubSeason[] SUB_SEASONS = Season.SubSeason.values();
-    private static final transient Season.TropicalSeason[] TROPICAL_SEASONS = Season.TropicalSeason.values();
+    private static final Season[] SEASONS = Season.values();
+    private static final Season.SubSeason[] SUB_SEASONS = Season.SubSeason.values();
+    private static final Season.TropicalSeason[] TROPICAL_SEASONS = Season.TropicalSeason.values();
 
     private Set<String> seasons = null;
     private Set<String> subSeasons = null;
@@ -33,14 +33,17 @@ public class SeasonSpawnCondition extends SpawnCondition {
         super.onExport();
         // Wouldn't it be nice if we had the ability to implement our own adapter?
         this.seasons = this.cachedSeasons.isEmpty() ? null : Sets.newHashSet();
-        if (this.seasons != null)
+        if (this.seasons != null) {
             this.exportEnums(this.cachedSeasons, this.seasons);
+        }
         this.subSeasons = this.cachedSubSeasons.isEmpty() ? null : Sets.newHashSet();
-        if (this.subSeasons != null)
+        if (this.subSeasons != null) {
             this.exportEnums(this.cachedSubSeasons, this.subSeasons);
+        }
         this.tropicalSeasons = this.cachedTropicalSeasons.isEmpty() ? null : Sets.newHashSet();
-        if (this.tropicalSeasons != null)
+        if (this.tropicalSeasons != null) {
             this.exportEnums(this.cachedTropicalSeasons, this.tropicalSeasons);
+        }
     }
 
     @Override
@@ -55,12 +58,14 @@ public class SeasonSpawnCondition extends SpawnCondition {
     public boolean fits(SpawnInfo spawnInfo, SpawnLocation spawnLocation) {
         final boolean baseResult = super.fits(spawnInfo, spawnLocation);
         // No point in going on.
-        if (!baseResult)
+        if (!baseResult) {
             return false;
+        }
         final World world = spawnLocation.location.world;
         // You never know.
-        if (world == null)
+        if (world == null) {
             return false;
+        }
         final ISeasonState seasonState = SeasonHelper.getSeasonState(world);
         final boolean seasonResult = this.checkState(this.cachedSeasons, seasonState.getSeason());
         final boolean subSeasonResult = this.checkState(this.cachedSubSeasons, seasonState.getSubSeason());
@@ -106,8 +111,9 @@ public class SeasonSpawnCondition extends SpawnCondition {
 
     private <E extends Enum<E>> void importEnums(@Nullable Set<String> inputs, Set<E> holder, E[] values) {
         holder.clear();
-        if (inputs == null)
+        if (inputs == null) {
             return;
+        }
         for (String input : inputs) {
             for (E value : values) {
                 if (value.name().equalsIgnoreCase(input)) {
@@ -119,8 +125,9 @@ public class SeasonSpawnCondition extends SpawnCondition {
     }
 
     private <E extends Enum<E>> boolean checkState(Set<E> holder, E current) {
-        if (holder.isEmpty())
+        if (holder.isEmpty()) {
             return true;
+        }
         return holder.contains(current);
     }
 

@@ -7,7 +7,7 @@
     "mcversion": "${minecraftVersion}",
     "url": "https://github.com/Licious17/${modName}",
     "updateUrl": "",
-    "authorList": ["Licious"],
+    "authorList": ["Licious", "Lileep"],
     "credits": "Raid Shadow Legends for sponsoring this project.",
     "logoFile": "assets/${modId}/icon.png",
     "screenshots": [],
