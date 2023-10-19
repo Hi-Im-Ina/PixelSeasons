@@ -14,7 +14,7 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle'
 
-version = modVersion
+version = minecraftVersion + '-' + modVersion
 group = modGroup
 archivesBaseName = modName
 
@@ -48,12 +48,12 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:' + minecraftVersion + '-' + forgeVersion
-    implementation fg.deobf('curse.maven:serene-seasons-' + sereneSeasonsId + ':' + sereneSeasonsVersion)
-    implementation fg.deobf('curse.maven:pixelmon-' + pixelmonId + ':' + pixelmonVersion)
+	implementation files('libs/Pixelmon-' + minecraftVersion + '-' + pixelmonVersion + '-universal.jar')
+	implementation files('libs/SereneSeasons-' + minecraftVersion + '-' + sereneSeasonsVersion + '-universal.jar')
 }
 
 processResources {
-    filesMatching('mcmod.info') {
+    filesMatching('META-INF/mods.toml') {
         expand(
             'modId': modId,
             'modName': modName,
