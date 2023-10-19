@@ -53,7 +53,7 @@ dependencies {
 }
 
 processResources {
-    filesMatching('mcmod.info') {
+    filesMatching('META-INF/mods.toml') {
         expand(
             'modId': modId,
             'modName': modName,
